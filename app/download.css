@@ -1,0 +1,11 @@
+
+.wrapper {
+    width: 55rem;
+    display:block;
+    background: hsl(199deg 15% 15%);
+    position: absolute;
+    border-radius: 50px;
+    z-index: -1;
+    height: 45rem;
+    opacity: 70%;
+}   

@@ -1,0 +1,18 @@
+h4 {
+    font-size: 0.8rem;
+    color: #fff;
+    position: relative;
+    bottom: 20px;
+}
+
+
+  .wrapper {
+    width: 50rem;
+    display:block;
+    background: hsl(199deg 15% 15%);
+    position: absolute;
+    border-radius: 50px;
+    z-index: -1;
+    height: 55rem;
+    opacity: 70%;
+}   

@@ -1,1 +1,43 @@
+name: CI/CD
 
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+
+  deploy:
+
+    name: AWS EC2 Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Docker Login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORDS}}
+        run:
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: Docker Push
+        env:
+          REPO: selfproject
+        run: |
+          docker build -t ${{secrets.DOCKER_USER}}/$REPO:latest .
+          docker push ${{secrets.DOCKER_USER}}/$REPO
+      - name: Docker Pull & Run From Hub
+        uses: appleboy/ssh-action@master
+        with:
+          host: ec2-18-185-74-211.eu-central-1.compute.amazonaws.com
+          username: ubuntu
+          key: ${{secrets.ACTION_PRIVATE_KEY}}
+          envs: GITHUB_SHA
+          script: |
+            docker login
+            docker pull ${{secrets.DOCKER_USER}}/$REPO
+            docker stop fe_app
+            docker rm fe_app
+            docker run -d --name fe_app -p 80:3000 ${{secrets.DOCKER_USER}}/$REPO:latest

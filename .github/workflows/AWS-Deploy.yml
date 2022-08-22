@@ -22,7 +22,7 @@ jobs:
           DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
         run:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      - name: Docker Push
+      - name: Docker Build and Push
         env:
           REPO: selfproject
         run: |
@@ -36,8 +36,6 @@ jobs:
           key: ${{secrets.ACTION_PRIVATE_KEY}}
           envs: GITHUB_SHA
           script: |
-            whoami
-            hostname
             docker login
             docker pull ${{secrets.DOCKER_USER}}/$REPO:latest
             docker stop fe_app
